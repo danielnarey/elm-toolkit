@@ -7,9 +7,7 @@ module Toolkit.Operators exposing
 
 {-|
 
-## A small set of custom infix operators for maintaining a consistent,
-unidirectional coding style when working with lists, `Maybe` and `Result`
-values, and functions that take multiple arguments
+## A small set of custom infix operators for maintaining a consistent, unidirectional coding style when working with lists, `Maybe` and `Result` values, and functions that take multiple arguments
 
 At some point after I started working in Elm, it became clear to me that
 debugging, refactoring, and extending existing code would be a lot easier if
