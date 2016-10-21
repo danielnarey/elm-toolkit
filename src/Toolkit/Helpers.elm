@@ -306,16 +306,16 @@ curry4 f a b c d =
 {-| [`uncurry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#uncurry)
 with 3 parameters
 -}
-uncurry3 : (a, b, c) -> (a -> b -> c -> d) -> d
-uncurry3 (a, b, c) f =
+uncurry3 : (a -> b -> c -> d) -> (a, b, c) -> d
+uncurry3 f (a, b, c) =
   f a b c
 
 
 {-| [`uncurry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#uncurry)
 with 4 parameters
 -}
-uncurry4 : (a, b, c, d) -> (a -> b -> c -> d -> e) -> e
-uncurry4 (a, b, c, d) f =
+uncurry4 : (a -> b -> c -> d -> e) -> (a, b, c, d) -> e
+uncurry4 f (a, b, c, d) =
   f a b c d
 
 
