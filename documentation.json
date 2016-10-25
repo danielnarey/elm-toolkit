@@ -1,5 +1,98 @@
 [
   {
+    "name": "Toolkit.Operators",
+    "comment": "\n\n## A small set of custom infix operators for maintaining a consistent, unidirectional coding style when working with lists, `Maybe` and `Result` values, and functions that take multiple arguments\n\nAt some point after I started working in Elm, it became clear to me that\ndebugging, refactoring, and extending existing code would be a lot easier if\nI conventionalized some stylistic choices so that code blocks would always be\nformatted in a consistent way. The built-in functional operators in Elm allow\nfor a lot of flexibility in how code is written, but some of that flexibility\nhas to be reined in if we want to emphasize readability as a virtue in\nfunctional programming.\n\nIn constructing some stylistic rules for my own code, the principle I decided to\nprioritize is what I call __unidirectionality__: *the idea that a programmer\nshould be able to readily discern the sequence of function calls in a code block\nby visually scanning the code from top to bottom, and then from left to right*.\n\nAccording to this principle, the \"data\" — that is, the value or set of values\nthat the function is called *on* — should always appear at the top of the code\nblock, with functions called on the data appearing on subsequent lines. A\nnested series of function calls can appear on one line, but more complex code\nchunks should be broken up into self-contained functions using `let..in`\nstatements. Nested list brackets and complex code chunks within list brackets\nshould generally be avoided.\n\nWith the above principle, the `|>` operator is used very liberally, the `>>`\noperator is used only in rare cases, and there is no use case for \"reverse\"\n(right-to-left) functional operators. In addition to liberal use of the `|>`\noperator, I have found use cases for a small set of custom operators that help\nto maintain consistent visual formatting and enhance readability of code blocks\nby reducing clutter. I have included them here in one module so that I can\neasily import them into other projects.\n\n\n# Appending Things\n@docs (|++), (|::), (:+:)\n\n# Function Application\n@docs (||>), (.|>), (:|>)\n\n# Error Handling with `Maybe` and `Result` Values\n@docs (?=), (!=), (?|>), (!|>)\n\n# Uncurry Operators\n@docs (@@|>), (@@@|>)\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "!=",
+        "comment": " Forward operator for Result.withDefault\n\n    String.toInt \"123\" != 0   --> 123\n    String.toInt \"abc\" != 0   --> 0\n",
+        "type": "Result.Result x a -> a -> a",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "!|>",
+        "comment": " Forward operator for Result.map\n\n    Ok 4.0 !|> sqrt             --> Ok 2.0\n    Err \"bad input\" !|> sqrt    --> Err \"bad input\"\n\n",
+        "type": "Result.Result x a -> (a -> value) -> Result.Result x value",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": ".|>",
+        "comment": " Forward operator for List.map\n\n    [1,4,9] .|> sqrt    --> [1,2,3]\n",
+        "type": "List a -> (a -> b) -> List b",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": ":+:",
+        "comment": " Construct a list from the LHS and RHS; precedence is 5 and associativity is\nright (same as `++`)\n\n    1 :+: 2   --> [1, 2]\n",
+        "type": "a -> a -> List a",
+        "associativity": "right",
+        "precedence": 5
+      },
+      {
+        "name": ":|>",
+        "comment": " Wrap LHS in a list, then apply RHS function\n\n    1 :|> List.head   --> Just 1\n",
+        "type": "a -> (List a -> b) -> b",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "?=",
+        "comment": " Forward operator for Maybe.withDefault\n\n    Just 42 ?= 100    --> 42\n    Nothing ?= 100    --> 100\n",
+        "type": "Maybe.Maybe a -> a -> a",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "?|>",
+        "comment": " Forward operator for Maybe.map\n\n    Just 9 ?|> sqrt     --> Just 3\n    Nothing ?|> sqrt    --> Nothing\n\n",
+        "type": "Maybe.Maybe a -> (a -> b) -> Maybe.Maybe b",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "@@@|>",
+        "comment": " Forward operator for\n[`uncurry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#uncurry)\nwith 3 parameters\n\n    (10, 20, 30) @@@|> clamp    --> 20\n",
+        "type": "( a, b, c ) -> (a -> b -> c -> d) -> d",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "@@|>",
+        "comment": " Forward operator for\n[`uncurry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#uncurry)\nwith 2 parameters\n\n    (1,2) @@|> (+)    --> 3\n",
+        "type": "( a, b ) -> (a -> b -> c) -> c",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "|++",
+        "comment": " Append the RHS to the end of the LHS; equivalent to `++`, but\nleft-associative with precedence set to `0` (same as `|>`)\n\n    (\"ba\" |> String.reverse) ++ \"c\"       --> \"abc\"\n    \"ba\" |> String.reverse ++ \"c\"         --> ERROR\n    \"ba\" |> String.reverse |++ \"c\"        --> \"abc\"\n\n",
+        "type": "appendable -> appendable -> appendable",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "|::",
+        "comment": " Append the item on the RHS to the end of the list on the LHS\n\n    [1] |:: 2         --> [1,2]\n    [1] |:: 2 |:: 3   --> [1,2,3]\n",
+        "type": "List a -> a -> List a",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "||>",
+        "comment": " Forward function application with precedence set to 9. Allows you to avoid\nparentheses when you want the argument to appear before the function name in an\ninline expression. \n\n    1 ||> toString ++ 2 ||> toString    --> \"12\"\n",
+        "type": "a -> (a -> b) -> b",
+        "associativity": "left",
+        "precedence": 9
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
     "name": "Toolkit.Helpers",
     "comment": "\n\n## Some generic helper functions for type conversion, error handling, and working with lists, tuples, and functions\n\nThis is my personal library of helper functions for writing clean,\nunidirectional, semantically pleasing Elm code. I've included all of these\nfunctions in one module so that I can easily import them into other projects.\n\n# String-to-Bool Conversion\n@docs toBool\n\n# Error Handling with Chained Results\n@docs thenTry\n\n# Error Handling with Multiple `Maybe` Values\n@docs maybe2Tuple, maybe3Tuple, maybe4Tuple\n\n# Value-to-List and Value-From-List Conversions\n@docs wrapList, getNth\n\n# List-Tuple Conversions\n@docs take2Tuple, take3Tuple, take4Tuple, unzip3, unzip4, zip, zip3, zip4\n\n# Getting Values from Tuples\n@docs fst3, snd3, trd3, fst4, snd4, trd4, fth4\n\n# Currying and Uncurrying\n@docs curry3, curry4, uncurry3, uncurry4\n\n# Applying Multiple Functions to Data\n@docs apply2, apply3, apply4, applyList\n\n",
     "aliases": [],
@@ -118,12 +211,12 @@
       {
         "name": "uncurry3",
         "comment": " [`uncurry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#uncurry)\nwith 3 parameters\n",
-        "type": "( a, b, c ) -> (a -> b -> c -> d) -> d"
+        "type": "(a -> b -> c -> d) -> ( a, b, c ) -> d"
       },
       {
         "name": "uncurry4",
         "comment": " [`uncurry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#uncurry)\nwith 4 parameters\n",
-        "type": "( a, b, c, d ) -> (a -> b -> c -> d -> e) -> e"
+        "type": "(a -> b -> c -> d -> e) -> ( a, b, c, d ) -> e"
       },
       {
         "name": "unzip3",
@@ -154,92 +247,6 @@
         "name": "zip4",
         "comment": " Convert a 4-tuple of lists to a list of 4-tuples\n",
         "type": "( List a, List b, List c, List d ) -> List ( a, b, c, d )"
-      }
-    ],
-    "generated-with-elm-version": "0.17.0"
-  },
-  {
-    "name": "Toolkit.Operators",
-    "comment": "\n\n## A small set of custom infix operators for maintaining a consistent, unidirectional coding style when working with lists, `Maybe` and `Result` values, and functions that take multiple arguments\n\nAt some point after I started working in Elm, it became clear to me that\ndebugging, refactoring, and extending existing code would be a lot easier if\nI conventionalized some stylistic choices so that code blocks would always be\nformatted in a consistent way. The built-in functional operators in Elm allow\nfor a lot of flexibility in how code is written, but some of that flexibility\nhas to be reined in if we want to emphasize readability as a virtue in\nfunctional programming.\n\nIn constructing some stylistic rules for my own code, the principle I decided to\nprioritize is what I call __unidirectionality__: *the idea that a programmer\nshould be able to readily discern the sequence of function calls in a code block\nby visually scanning the code from top to bottom, and then from left to right*.\n\nAccording to this principle, the \"data\" — that is, the value or set of values\nthat the function is called *on* — should always appear at the top of the code\nblock, with functions called on the data appearing on subsequent lines. A\nnested series of function calls can appear on one line, but more complex code\nchunks should be broken up into self-contained functions using `let..in`\nstatements. Nested list brackets and complex code chunks within list brackets\nshould generally be avoided.\n\nWith the above principle, the `|>` operator is used very liberally, the `>>`\noperator is used only in rare cases, and there is no use case for \"reverse\"\n(right-to-left) functional operators. In addition to liberal use of the `|>`\noperator, I have found use cases for a small set of custom operators that help\nto maintain consistent visual formatting and enhance readability of code blocks\nby reducing clutter. I have included them here in one module so that I can\neasily import them into other projects.\n\n\n# Appending Things\n@docs (|++), (|::), (:+:)\n\n# Function Application with Lists\n@docs (.|>), (:|>)\n\n# Error Handling with `Maybe` and `Result` Values\n@docs (?=), (!=), (?|>), (!|>)\n\n# Uncurry Operators\n@docs (@@|>), (@@@|>)\n",
-    "aliases": [],
-    "types": [],
-    "values": [
-      {
-        "name": "!=",
-        "comment": " Forward operator for Result.withDefault\n\n    String.toInt \"123\" != 0   --> 123\n    String.toInt \"abc\" != 0   --> 0\n",
-        "type": "Result.Result x a -> a -> a",
-        "associativity": "left",
-        "precedence": 0
-      },
-      {
-        "name": "!|>",
-        "comment": " Forward operator for Result.map\n\n    Ok 4.0 !|> sqrt             --> Ok 2.0\n    Err \"bad input\" !|> sqrt    --> Err \"bad input\"\n\n",
-        "type": "Result.Result x a -> (a -> value) -> Result.Result x value",
-        "associativity": "left",
-        "precedence": 0
-      },
-      {
-        "name": ".|>",
-        "comment": " Forward operator for List.map\n\n    [1,4,9] .|> sqrt    --> [1,2,3]\n",
-        "type": "List a -> (a -> b) -> List b",
-        "associativity": "left",
-        "precedence": 0
-      },
-      {
-        "name": ":+:",
-        "comment": " Construct a list from the LHS and RHS; precedence is 5 and associativity is\nright (same as `++`)\n\n    1 :+: 2   --> [1, 2]\n",
-        "type": "a -> a -> List a",
-        "associativity": "right",
-        "precedence": 5
-      },
-      {
-        "name": ":|>",
-        "comment": " Wrap LHS in a list, then apply RHS function\n\n    1 :|> List.head   --> Just 1\n",
-        "type": "a -> (List a -> b) -> b",
-        "associativity": "left",
-        "precedence": 0
-      },
-      {
-        "name": "?=",
-        "comment": " Forward operator for Maybe.withDefault\n\n    Just 42 ?= 100    --> 42\n    Nothing ?= 100    --> 100\n",
-        "type": "Maybe.Maybe a -> a -> a",
-        "associativity": "left",
-        "precedence": 0
-      },
-      {
-        "name": "?|>",
-        "comment": " Forward operator for Maybe.map\n\n    Just 9 ?|> sqrt     --> Just 3\n    Nothing ?|> sqrt    --> Nothing\n\n",
-        "type": "Maybe.Maybe a -> (a -> b) -> Maybe.Maybe b",
-        "associativity": "left",
-        "precedence": 0
-      },
-      {
-        "name": "@@@|>",
-        "comment": " Forward operator for\n[`uncurry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#uncurry)\nwith 3 parameters\n\n    (10, 20, 30) @@@|> clamp    --> 20\n",
-        "type": "( a, b, c ) -> (a -> b -> c -> d) -> d",
-        "associativity": "left",
-        "precedence": 0
-      },
-      {
-        "name": "@@|>",
-        "comment": " Forward operator for\n[`uncurry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#uncurry)\nwith 2 parameters\n\n    (1,2) @@|> (+)    --> 3\n",
-        "type": "( a, b ) -> (a -> b -> c) -> c",
-        "associativity": "left",
-        "precedence": 0
-      },
-      {
-        "name": "|++",
-        "comment": " Append the RHS to the end of the LHS; equivalent to `++`, but\nleft-associative with precedence set to `0` (same as `|>`)\n\n    (\"ba\" |> String.reverse) ++ \"c\"       --> \"abc\"\n    \"ba\" |> String.reverse ++ \"c\"         --> ERROR\n    \"ba\" |> String.reverse |++ \"c\"        --> \"abc\"\n\n",
-        "type": "appendable -> appendable -> appendable",
-        "associativity": "left",
-        "precedence": 0
-      },
-      {
-        "name": "|::",
-        "comment": " Append the item on the RHS to the end of the list on the LHS\n\n    [1] |:: 2         --> [1,2]\n    [1] |:: 2 |:: 3   --> [1,2,3]\n",
-        "type": "List a -> a -> List a",
-        "associativity": "left",
-        "precedence": 0
       }
     ],
     "generated-with-elm-version": "0.17.0"

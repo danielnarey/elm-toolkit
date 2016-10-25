@@ -1,6 +1,6 @@
 module Toolkit.Operators exposing
   ( (|++), (|::), (:+:)
-  , (.|>), (:|>)
+  , (||>), (.|>), (:|>)
   , (?=), (!=), (?|>), (!|>)
   , (@@|>), (@@@|>)
   )
@@ -42,8 +42,8 @@ easily import them into other projects.
 # Appending Things
 @docs (|++), (|::), (:+:)
 
-# Function Application with Lists
-@docs (.|>), (:|>)
+# Function Application
+@docs (||>), (.|>), (:|>)
 
 # Error Handling with `Maybe` and `Result` Values
 @docs (?=), (!=), (?|>), (!|>)
@@ -98,7 +98,19 @@ right (same as `++`)
 infixr 5 :+:
 
 
---FUNCTION APPLICATION WITH LISTS
+--FUNCTION APPLICATION
+
+{-| Forward function application with precedence set to 9. Allows you to avoid
+parentheses when you want the argument to appear before the function name in an
+inline expression. 
+
+    1 ||> toString ++ 2 ||> toString    --> "12"
+-}
+(||>) : a -> (a -> b) -> b
+(||>) a f =
+  f a
+
+infixl 9 ||>
 
 {-| Forward operator for List.map
 
