@@ -1,5 +1,5 @@
 {
-    "version": "2.1.0",
+    "version": "3.0.0",
     "summary": "Generic helpers and custom operators that I use across other projects",
     "repository": "https://github.com/danielnarey/elm-toolkit.git",
     "license": "BSD2",
@@ -12,7 +12,7 @@
         "Toolkit.Operators"
     ],
     "dependencies": {
-        "elm-lang/core": "4.0.5 <= v < 5.0.0"
+        "elm-lang/core": "5.0.0 <= v < 6.0.0"
     },
-    "elm-version": "0.17.0 <= v < 0.18.0"
+    "elm-version": "0.18.0 <= v < 0.19.0"
 }

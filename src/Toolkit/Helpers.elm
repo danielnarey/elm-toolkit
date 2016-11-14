@@ -1,7 +1,7 @@
 module Toolkit.Helpers exposing
-  ( toBool, thenTry, maybe2Tuple, maybe3Tuple, maybe4Tuple, wrapList, getNth
-  , take2Tuple, take3Tuple, take4Tuple, unzip3, unzip4, zip, zip3, zip4, fst3
-  , snd3, trd3, fst4, snd4, trd4, fth4, curry3, curry4, uncurry3, uncurry4
+  ( toBool, maybe2Tuple, maybe3Tuple, maybe4Tuple, wrapList, getNth, take2Tuple
+  , take3Tuple, take4Tuple, unzip3, unzip4, zip, zip3, zip4, first3, second3
+  , third3, first4, second4, third4, fourth4, curry3, curry4, uncurry3, uncurry4
   , apply2, apply3, apply4, applyList)
 
 
@@ -16,9 +16,6 @@ functions in one module so that I can easily import them into other projects.
 # String-to-Bool Conversion
 @docs toBool
 
-# Error Handling with Chained Results
-@docs thenTry
-
 # Error Handling with Multiple `Maybe` Values
 @docs maybe2Tuple, maybe3Tuple, maybe4Tuple
 
@@ -29,7 +26,7 @@ functions in one module so that I can easily import them into other projects.
 @docs take2Tuple, take3Tuple, take4Tuple, unzip3, unzip4, zip, zip3, zip4
 
 # Getting Values from Tuples
-@docs fst3, snd3, trd3, fst4, snd4, trd4, fth4
+@docs first3, second3, third3, first4, second4, third4, fourth4
 
 # Currying and Uncurrying
 @docs curry3, curry4, uncurry3, uncurry4
@@ -66,23 +63,6 @@ toBool boolString =
 
     _ ->
       Err "String argument must be 'true' or 'false' (case ignored)"
-
-
---ERROR HANDLING WITH CHAINED RESULTS
-
-{-| Same as
-[`Result.andThen`](http://package.elm-lang.org/packages/elm-lang/core/latest/Result#andThen),
-but flips the order of the arguments, allowing for cleaner syntax when used with
-the `|>` operator.
-
-    rawString
-      |> toInt
-      |> thenTry toValidMonth
-
--}
-thenTry : (a -> Result x b) -> Result x a -> Result x b
-thenTry callback result =
-  Result.andThen result callback
 
 
 --ERROR HANDLING WITH MULTIPLE MAYBES
@@ -244,44 +224,44 @@ zip4 (list1, list2, list3, list4) =
 
 {-| Return the first value of a 3-tuple
 -}
-fst3 : (a, b, c) -> a
-fst3 (a, b, c) =
+first3 : (a, b, c) -> a
+first3 (a, b, c) =
   a
 
 {-| Return the second value of a 3-tuple
 -}
-snd3 : (a, b, c) -> b
-snd3 (a, b, c) =
+second3 : (a, b, c) -> b
+second3 (a, b, c) =
   b
 
 {-| Return the third value of a 3-tuple
 -}
-trd3 : (a, b, c) -> c
-trd3 (a, b, c) =
+third3 : (a, b, c) -> c
+third3 (a, b, c) =
   c
 
 {-| Return the first value of a 4-tuple
 -}
-fst4 : (a, b, c, d) -> a
-fst4 (a, b, c, d) =
+first4 : (a, b, c, d) -> a
+first4 (a, b, c, d) =
   a
 
 {-| Return the second value of a 4-tuple
 -}
-snd4 : (a, b, c, d) -> b
-snd4 (a, b, c, d) =
+second4 : (a, b, c, d) -> b
+second4 (a, b, c, d) =
   b
 
 {-| Return the third value of a 4-tuple
 -}
-trd4 : (a, b, c, d) -> c
-trd4 (a, b, c, d) =
+third4 : (a, b, c, d) -> c
+third4 (a, b, c, d) =
   c
 
 {-| Return the fourth value of a 4-tuple
 -}
-fth4 : (a, b, c, d) -> d
-fth4 (a, b, c, d) =
+fourth4 : (a, b, c, d) -> d
+fourth4 (a, b, c, d) =
   d
 
 
