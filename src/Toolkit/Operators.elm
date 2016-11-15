@@ -1,7 +1,7 @@
 module Toolkit.Operators exposing
   ( (|++), (|::), (:+:)
   , (||>), (.|>), (:|>)
-  , (?=), (!=), (?|>), (!|>)
+  , (?=), (!=), (?|>), (!|>), (?+>), (!+>)
   , (@@|>), (@@@|>)
   )
 
@@ -46,7 +46,7 @@ easily import them into other projects.
 @docs (||>), (.|>), (:|>)
 
 # Error Handling with `Maybe` and `Result` Values
-@docs (?=), (!=), (?|>), (!|>)
+@docs (?=), (!=), (?|>), (!|>), (?+>), (!+>)
 
 # Uncurry Operators
 @docs (@@|>), (@@@|>)
@@ -102,7 +102,7 @@ infixr 5 :+:
 
 {-| Forward function application with precedence set to 9. Allows you to avoid
 parentheses when you want the argument to appear before the function name in an
-inline expression. 
+inline expression.
 
     1 ||> toString ++ 2 ||> toString    --> "12"
 -}
@@ -184,6 +184,30 @@ infixl 0 ?|>
   Result.map f resultValue
 
 infixl 0 !|>
+
+
+{-| Forward operator for Maybe.andThen
+
+    head months ?+> toValidMonth
+-}
+(?+>) : Maybe a -> (a -> Maybe b) -> Maybe b
+(?+>) firstResult nextFunction =
+  firstResult
+    |> Maybe.andThen nextFunction
+
+infixl 0 ?+>
+
+
+{-| Forward operator for Result.andThen
+
+    toInt rawString !+> toValidMonth
+-}
+(!+>) : Result x a -> (a -> Result x b) -> Result x b
+(!+>) firstResult nextFunction =
+  firstResult
+    |> Result.andThen nextFunction
+
+infixl 0 !+>
 
 
 --UNCURRYING
