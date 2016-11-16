@@ -1,8 +1,9 @@
 module Toolkit.Operators exposing
   ( (|++), (|::), (:+:)
-  , (||>), (.|>), (:|>)
+  , (||>)
+  , (.|>), (:|>)
+  , (..|>), (...|>), (@@|>), (@@@|>)
   , (?=), (!=), (?|>), (!|>), (?+>), (!+>)
-  , (@@|>), (@@@|>)
   )
 
 {-|
@@ -43,13 +44,17 @@ easily import them into other projects.
 @docs (|++), (|::), (:+:)
 
 # Function Application
-@docs (||>), (.|>), (:|>)
+@docs (||>)
+
+## with Lists
+@docs (.|>), (:|>)
+
+## with Tuples
+@docs (..|>), (...|>), (@@|>), (@@@|>)
 
 # Error Handling with `Maybe` and `Result` Values
 @docs (?=), (!=), (?|>), (!|>), (?+>), (!+>)
 
-# Uncurry Operators
-@docs (@@|>), (@@@|>)
 -}
 
 import List
@@ -112,6 +117,7 @@ inline expression.
 
 infixl 9 ||>
 
+
 {-| Forward operator for List.map
 
     [1,4,9] .|> sqrt    --> [1,2,3]
@@ -132,6 +138,52 @@ infixl 0 .|>
   f [ a ]
 
 infixl 0 :|>
+
+
+{-| Forward operator for
+[map2Tuple](http://package.elm-lang.org/packages/danielnarey/elm-toolkit/latest/Toolkit-Helpers#map2Tuple)
+-}
+(..|>) : (a, a) -> (a -> b) -> (b, b)
+(..|>) (a1, a2) f =
+  (f a1, f a2)
+
+infixl 0 ..|>
+
+
+{-| Forward operator for
+[map3Tuple](http://package.elm-lang.org/packages/danielnarey/elm-toolkit/latest/Toolkit-Helpers#map3Tuple)
+-}
+(...|>) : (a, a, a) -> (a -> b) -> (b, b, b)
+(...|>) (a1, a2, a3) f =
+  (f a1, f a2, f a3)
+
+infixl 0 ...|>
+
+
+{-| Forward operator for
+[`uncurry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#uncurry)
+with 2 parameters
+
+    (1,2) @@|> (+)    --> 3
+-}
+(@@|>) : (a, b) -> (a -> b -> c) -> c
+(@@|>) params f =
+  uncurry f params
+
+infixl 0 @@|>
+
+
+{-| Forward operator for
+[`uncurry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#uncurry)
+with 3 parameters
+
+    (10, 20, 30) @@@|> clamp    --> 20
+-}
+(@@@|>) : (a, b, c) -> (a -> b -> c -> d) -> d
+(@@@|>) (a, b, c) f =
+  f a b c
+
+infixl 0 @@@|>
 
 
 -- ERROR HANDLING
@@ -208,31 +260,3 @@ infixl 0 ?+>
     |> Result.andThen nextFunction
 
 infixl 0 !+>
-
-
---UNCURRYING
-
-{-| Forward operator for
-[`uncurry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#uncurry)
-with 2 parameters
-
-    (1,2) @@|> (+)    --> 3
--}
-(@@|>) : (a, b) -> (a -> b -> c) -> c
-(@@|>) params f =
-  uncurry f params
-
-infixl 0 @@|>
-
-
-{-| Forward operator for
-[`uncurry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#uncurry)
-with 3 parameters
-
-    (10, 20, 30) @@@|> clamp    --> 20
--}
-(@@@|>) : (a, b, c) -> (a -> b -> c -> d) -> d
-(@@@|>) (a, b, c) f =
-  f a b c
-
-infixl 0 @@@|>

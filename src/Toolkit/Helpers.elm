@@ -1,8 +1,9 @@
 module Toolkit.Helpers exposing
   ( toBool, maybe2Tuple, maybe3Tuple, maybe4Tuple, wrapList, getNth, take2Tuple
   , take3Tuple, take4Tuple, unzip3, unzip4, zip, zip3, zip4, first3, second3
-  , third3, first4, second4, third4, fourth4, curry3, curry4, uncurry3, uncurry4
-  , apply2, apply3, apply4, applyList)
+  , third3, first4, second4, third4, fourth4, map2Tuple, map3Tuple, map4Tuple
+  , curry3, curry4, uncurry3, uncurry4, apply2, apply3, apply4, applyList
+  )
 
 
 {-|
@@ -27,6 +28,9 @@ functions in one module so that I can easily import them into other projects.
 
 # Getting Values from Tuples
 @docs first3, second3, third3, first4, second4, third4, fourth4
+
+# Mapping Functions to Tuples
+@docs map2Tuple, map3Tuple, map4Tuple
 
 # Currying and Uncurrying
 @docs curry3, curry4, uncurry3, uncurry4
@@ -263,6 +267,32 @@ third4 (a, b, c, d) =
 fourth4 : (a, b, c, d) -> d
 fourth4 (a, b, c, d) =
   d
+
+
+--MAPPING FUNCTIONS TO TUPLES
+
+{-| Apply a function to both values in a 2-tuple and return the results as a
+2-tuple
+-}
+map2Tuple : (a -> b) -> (a, a) -> (b, b)
+map2Tuple f (a1, a2) =
+  (f a1, f a2)
+
+
+{-| Apply a function to all 3 values in a 3-tuple and return the results as a
+3-tuple
+-}
+map3Tuple : (a -> b) -> (a, a, a) -> (b, b, b)
+map3Tuple f (a1, a2, a3) =
+  (f a1, f a2, f a3)
+
+
+{-| Apply a function to all 4 values in a 4-tuple and return the results as a
+4-tuple
+-}
+map4Tuple : (a -> b) -> (a, a, a, a) -> (b, b, b, b)
+map4Tuple f (a1, a2, a3, a4) =
+  (f a1, f a2, f a3, f a4)
 
 
 --CURRYING AND UNCURRYING
