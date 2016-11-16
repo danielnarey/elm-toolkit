@@ -94,7 +94,7 @@ infixl 0 |::
 {-| Construct a list from the LHS and RHS; precedence is 5 and associativity is
 right (same as `++`)
 
-    1 :+: 2   --> [1, 2]
+    1 :+: 2    --> [1, 2]
 -}
 (:+:) : a -> a -> List a
 (:+:) a1 a2 =
@@ -142,6 +142,8 @@ infixl 0 :|>
 
 {-| Forward operator for
 [map2Tuple](http://package.elm-lang.org/packages/danielnarey/elm-toolkit/latest/Toolkit-Helpers#map2Tuple)
+
+    (1,2) ..|> (+) 1    --> (2,3)
 -}
 (..|>) : (a, a) -> (a -> b) -> (b, b)
 (..|>) (a1, a2) f =
@@ -152,6 +154,8 @@ infixl 0 ..|>
 
 {-| Forward operator for
 [map3Tuple](http://package.elm-lang.org/packages/danielnarey/elm-toolkit/latest/Toolkit-Helpers#map3Tuple)
+
+    (1,2,3) ...|> (+) 1    --> (2,3,4)
 -}
 (...|>) : (a, a, a) -> (a -> b) -> (b, b, b)
 (...|>) (a1, a2, a3) f =
@@ -202,8 +206,8 @@ infixl 0 ?=
 
 {-| Forward operator for Result.withDefault
 
-    String.toInt "123" != 0   --> 123
-    String.toInt "abc" != 0   --> 0
+    String.toInt "123" != 0    --> 123
+    String.toInt "abc" != 0    --> 0
 -}
 (!=) : Result x a -> a -> a
 (!=) resultValue defaultValue =
@@ -240,7 +244,7 @@ infixl 0 !|>
 
 {-| Forward operator for Maybe.andThen
 
-    head months ?+> toValidMonth
+    List.head [1] ?+> always Nothing    --> Nothing
 -}
 (?+>) : Maybe a -> (a -> Maybe b) -> Maybe b
 (?+>) firstResult nextFunction =
@@ -252,7 +256,7 @@ infixl 0 ?+>
 
 {-| Forward operator for Result.andThen
 
-    toInt rawString !+> toValidMonth
+    String.toInt "1" !+> always (Err "ERROR")    --> Err "ERROR"
 -}
 (!+>) : Result x a -> (a -> Result x b) -> Result x b
 (!+>) firstResult nextFunction =

@@ -1,5 +1,5 @@
 {
-    "version": "3.2.0",
+    "version": "3.2.1",
     "summary": "Generic helpers and custom operators that I use across other projects",
     "repository": "https://github.com/danielnarey/elm-toolkit.git",
     "license": "BSD2",
