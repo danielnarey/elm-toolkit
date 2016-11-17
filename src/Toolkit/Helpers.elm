@@ -1,8 +1,9 @@
 module Toolkit.Helpers exposing
-  ( toBool, maybe2Tuple, maybe3Tuple, maybe4Tuple, wrapList, getNth, take2Tuple
-  , take3Tuple, take4Tuple, unzip3, unzip4, zip, zip3, zip4, first3, second3
-  , third3, first4, second4, third4, fourth4, map2Tuple, map3Tuple, map4Tuple
-  , curry3, curry4, uncurry3, uncurry4, apply2, apply3, apply4, applyList
+  ( toBool, maybe2Tuple, maybe3Tuple, maybe4Tuple, maybeList, wrapList, getNth
+  , take2Tuple, take3Tuple, take4Tuple, unzip3, unzip4, zip, zip3, zip4, first3
+  , second3, third3, first4, second4, third4, fourth4, map2Tuple, map3Tuple
+  , map4Tuple, curry3, curry4, uncurry3, uncurry4, apply2, apply3, apply4
+  , applyList
   )
 
 
@@ -18,7 +19,7 @@ functions in one module so that I can easily import them into other projects.
 @docs toBool
 
 # Error Handling with Multiple `Maybe` Values
-@docs maybe2Tuple, maybe3Tuple, maybe4Tuple
+@docs maybe2Tuple, maybe3Tuple, maybe4Tuple, maybeList
 
 # Value-to-List and Value-From-List Conversions
 @docs wrapList, getNth
@@ -108,6 +109,31 @@ maybe4Tuple tuple =
   case tuple of
     (Just a, Just b, Just c, Just d) ->
       Just (a, b, c, d)
+
+    _ ->
+      Nothing
+
+
+{-| Given a list of `Maybe` values, if all values are defined, return
+`Just` the list of values; otherwise, return `Nothing`. When passed an empty
+list, returns `Just` an empty list. 
+
+    maybeList [Just 1, Just 2]    --> Just [1,2]
+    maybeList [Just 1, Nothing]   --> Nothing
+    maybeList []                  --> Just []
+
+-}
+maybeList : List (Maybe a) -> Maybe (List a)
+maybeList list =
+  case list |> List.take 1 of
+    [ Just value ] ->
+      list
+        |> List.drop 1
+        |> maybeList
+        |> Maybe.map ((::) value)
+
+    [] ->
+      Just []
 
     _ ->
       Nothing
