@@ -1,9 +1,11 @@
 module Toolkit.Operators exposing
-  ( (|++), (|::), (:+:)
+  ( (|++), (|::)
   , (||>)
   , (.|>), (:|>)
-  , (..|>), (...|>), (@@|>), (@@@|>)
-  , (?=), (!=), (?|>), (!|>), (?+>), (!+>)
+  , (..|>), (@@|>)
+  , (?=), (!=)
+  , (?|>), (!|>)
+  , (?+>), (!+>)
   )
 
 {-|
@@ -41,7 +43,7 @@ easily import them into other projects.
 
 
 # Appending Things
-@docs (|++), (|::), (:+:)
+@docs (|++), (|::)
 
 # Function Application
 @docs (||>)
@@ -50,7 +52,7 @@ easily import them into other projects.
 @docs (.|>), (:|>)
 
 ## with Tuples
-@docs (..|>), (...|>), (@@|>), (@@@|>)
+@docs (..|>), (@@|>)
 
 # Error Handling with `Maybe` and `Result` Values
 @docs (?=), (!=), (?|>), (!|>), (?+>), (!+>)
@@ -89,18 +91,6 @@ infixl 0 |++
   list ++ [ a ]
 
 infixl 0 |::
-
-
-{-| Construct a list from the LHS and RHS; precedence is 5 and associativity is
-right (same as `++`)
-
-    1 :+: 2    --> [1, 2]
--}
-(:+:) : a -> a -> List a
-(:+:) a1 a2 =
-  [ a1, a2 ]
-
-infixr 5 :+:
 
 
 --FUNCTION APPLICATION
@@ -153,18 +143,6 @@ infixl 0 ..|>
 
 
 {-| Forward operator for
-[map3Tuple](http://package.elm-lang.org/packages/danielnarey/elm-toolkit/latest/Toolkit-Helpers#map3Tuple)
-
-    (1,2,3) ...|> (+) 1    --> (2,3,4)
--}
-(...|>) : (a, a, a) -> (a -> b) -> (b, b, b)
-(...|>) (a1, a2, a3) f =
-  (f a1, f a2, f a3)
-
-infixl 0 ...|>
-
-
-{-| Forward operator for
 [`uncurry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#uncurry)
 with 2 parameters
 
@@ -175,19 +153,6 @@ with 2 parameters
   uncurry f params
 
 infixl 0 @@|>
-
-
-{-| Forward operator for
-[`uncurry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#uncurry)
-with 3 parameters
-
-    (10, 20, 30) @@@|> clamp    --> 20
--}
-(@@@|>) : (a, b, c) -> (a -> b -> c -> d) -> d
-(@@@|>) (a, b, c) f =
-  f a b c
-
-infixl 0 @@@|>
 
 
 -- ERROR HANDLING
