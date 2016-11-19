@@ -1,9 +1,9 @@
 module Toolkit.Helpers exposing
-  ( toBool, maybe2Tuple, maybe3Tuple, maybe4Tuple, maybeList, wrapList, getNth
-  , take2Tuple, take3Tuple, take4Tuple, unzip3, unzip4, zip, zip3, zip4, first3
-  , second3, third3, first4, second4, third4, fourth4, map2Tuple, map3Tuple
-  , map4Tuple, curry3, curry4, uncurry3, uncurry4, apply2, apply3, apply4
-  , applyList
+  ( toBool, maybe2Tuple, maybe3Tuple, maybe4Tuple, maybeList, result2Tuple
+  , result3Tuple, result4Tuple, resultList, wrapList, getNth, take2Tuple
+  , take3Tuple, take4Tuple, unzip3, unzip4, zip, zip3, zip4, first3, second3
+  , third3, first4, second4, third4, fourth4, map2Tuple, map3Tuple, map4Tuple
+  , curry3, curry4, uncurry3, uncurry4, apply2, apply3, apply4, applyList
   )
 
 
@@ -20,6 +20,9 @@ functions in one module so that I can easily import them into other projects.
 
 # Error Handling with Multiple `Maybe` Values
 @docs maybe2Tuple, maybe3Tuple, maybe4Tuple, maybeList
+
+# Error Handling with Multiple `Result` Values
+@docs result2Tuple, result3Tuple, result4Tuple, resultList
 
 # Value-to-List and Value-From-List Conversions
 @docs wrapList, getNth
@@ -116,7 +119,7 @@ maybe4Tuple tuple =
 
 {-| Given a list of `Maybe` values, if all values are defined, return
 `Just` the list of values; otherwise, return `Nothing`. When passed an empty
-list, returns `Just` an empty list. 
+list, returns `Just` an empty list.
 
     maybeList [Just 1, Just 2]    --> Just [1,2]
     maybeList [Just 1, Nothing]   --> Nothing
@@ -137,6 +140,77 @@ maybeList list =
 
     _ ->
       Nothing
+
+
+--ERROR HANDLING WITH MULTIPLE RESULTS
+
+{-| Given a 2-tuple of `Result` values, if both values are `Ok`, return an `Ok`
+result containing the 2-tuple of values; otherwise, return an `Err` value.
+
+    result2Tuple "ERROR" (Ok 1, Ok 2)       --> Ok (1,2)
+    result2Tuple "ERROR" (Ok 1, Err "..")   --> Err "ERROR"
+-}
+result2Tuple : x -> (Result x a, Result x b) -> Result x (a, b)
+result2Tuple error tuple =
+  case tuple of
+    (Ok a, Ok b) ->
+      Ok (a, b)
+
+    _ ->
+      Err error
+
+
+{-| Given a 3-tuple of `Result` values, if all three values are `Ok`, return an
+`Ok` result containing the 3-tuple of values; otherwise, return an `Err`
+value.
+-}
+result3Tuple : x -> (Result x a, Result x b, Result x c) -> Result x (a, b, c)
+result3Tuple error tuple =
+  case tuple of
+    (Ok a, Ok b, Ok c) ->
+      Ok (a, b, c)
+
+    _ ->
+      Err error
+
+
+{-| Given a 4-tuple of `Result` values, if all three values are `Ok`, return an
+`Ok` result containing the 4-tuple of values; otherwise, return an `Err`
+value.
+-}
+result4Tuple : x -> (Result x a, Result x b, Result x c, Result x d) -> Result x (a, b, c, d)
+result4Tuple error tuple =
+  case tuple of
+    (Ok a, Ok b, Ok c, Ok d) ->
+      Ok (a, b, c, d)
+
+    _ ->
+      Err error
+
+
+{-| Given a list of `Result` values, if all values are `Ok`, return an `Ok`
+result containing the list of values; otherwise, return an error message. When
+passed an empty list, returns `Ok []`.
+
+    resultList "ERROR" [Ok 1, Ok 2]       --> Ok [1,2]
+    resultList "ERROR" [Ok 1, Err ".."]   --> Err "ERROR"
+    resultList []                         --> Ok []
+
+-}
+resultList : x -> List (Result x a) -> Result x (List a)
+resultList errorMsg list =
+  case list |> List.take 1 of
+    [ Ok value ] ->
+      list
+        |> List.drop 1
+        |> resultList errorMsg
+        |> Result.map ((::) value)
+
+    [] ->
+      Ok []
+
+    _ ->
+      Err errorMsg
 
 
 -- VALUE-TO-LIST AND VALUE-FROM-LIST CONVERSIONS
