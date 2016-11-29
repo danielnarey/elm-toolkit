@@ -1,9 +1,10 @@
 module Toolkit.Helpers exposing
-  ( toBool, maybe2Tuple, maybe3Tuple, maybe4Tuple, maybeList, result2Tuple
-  , result3Tuple, result4Tuple, resultList, wrapList, getNth, take2Tuple
-  , take3Tuple, take4Tuple, unzip3, unzip4, zip, zip3, zip4, first3, second3
-  , third3, first4, second4, third4, fourth4, map2Tuple, map3Tuple, map4Tuple
-  , curry3, curry4, uncurry3, uncurry4, apply2, apply3, apply4, applyList
+  ( toBool, isOneOf, isInRange, isBetween, maybe2Tuple, maybe3Tuple, maybe4Tuple
+  , maybeList, result2Tuple, result3Tuple, result4Tuple, resultList, wrapList
+  , getNth, take2Tuple, take3Tuple, take4Tuple, unzip3, unzip4, zip, zip3, zip4
+  , first3, second3, third3, first4, second4, third4, fourth4, map2Tuple
+  , map3Tuple, map4Tuple, curry3, curry4, uncurry3, uncurry4, apply2, apply3
+  , apply4, applyList
   )
 
 
@@ -17,6 +18,9 @@ functions in one module so that I can easily import them into other projects.
 
 # String-to-Bool Conversion
 @docs toBool
+
+# Test Functions
+@docs isOneOf, isInRange, isBetween
 
 # Error Handling with Multiple `Maybe` Values
 @docs maybe2Tuple, maybe3Tuple, maybe4Tuple, maybeList
@@ -71,6 +75,37 @@ toBool boolString =
 
     _ ->
       Err "String argument must be 'true' or 'false' (case ignored)"
+
+
+--TEST FUNCTIONS
+
+{-| Given a list and a test value, returns `True` if the list contains a value
+equal to the test value.
+
+Equivalent to
+[List.member](http://package.elm-lang.org/packages/elm-lang/core/latest/List#member)
+with the arguments flipped
+-}
+isOneOf : List a -> a -> Bool
+isOneOf list value =
+  List.member value list
+
+
+{-| Given a pair of values defining an interval and a test value, returns `True`
+if the test value falls within the interval, *including* its endpoints
+-}
+isInRange : (comparable, comparable) -> comparable -> Bool
+isInRange (min, max) value =
+  value >= min && value <= max
+
+
+{-| Given a pair of values defining an interval and a test value, returns `True`
+if the test value falls strictly *between* the endpoints of the interval, such
+that a test value equal to one of the endpoints will return `False`
+-}
+isBetween : (comparable, comparable) -> comparable -> Bool
+isBetween (min, max) value =
+  value > min && value < max
 
 
 --ERROR HANDLING WITH MULTIPLE MAYBES
