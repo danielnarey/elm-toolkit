@@ -1,10 +1,10 @@
 module Toolkit.Helpers exposing
-  ( toBool, isOneOf, isInRange, isBetween, maybe2Tuple, maybe3Tuple, maybe4Tuple
-  , maybeList, result2Tuple, result3Tuple, result4Tuple, resultList, wrapList
-  , getNth, take2Tuple, take3Tuple, take4Tuple, unzip3, unzip4, zip, zip3, zip4
-  , first3, second3, third3, first4, second4, third4, fourth4, map2Tuple
-  , map3Tuple, map4Tuple, curry3, curry4, uncurry3, uncurry4, apply2, apply3
-  , apply4, applyList
+  ( roundTo, toBool, isOneOf, isInRange, isBetween, maybe2Tuple, maybe3Tuple
+  , maybe4Tuple, maybeList, result2Tuple, result3Tuple, result4Tuple, resultList
+  , wrapList, getNth, take2Tuple, take3Tuple, take4Tuple, unzip3, unzip4, zip
+  , zip3, zip4, first3, second3, third3, first4, second4, third4, fourth4
+  , map2Tuple, map3Tuple, map4Tuple, curry3, curry4, uncurry3, uncurry4, apply2
+  , apply3, apply4, applyList
   )
 
 
@@ -15,6 +15,9 @@ module Toolkit.Helpers exposing
 This is my personal library of helper functions for writing clean,
 unidirectional, semantically pleasing Elm code. I've included all of these
 functions in one module so that I can easily import them into other projects.
+
+# Rounding Numbers
+@docs roundTo
 
 # String-to-Bool Conversion
 @docs toBool
@@ -54,7 +57,31 @@ import List
 import Result
 
 
---TYPE CONVERSION
+-- ROUNDING NUMBERS
+
+{-| Round a `Float` to a given number of decimal places
+
+    pi |> roundTo 2      --> 3.14
+    pi |> roundTo 0      --> 3
+    1234 |> roundTo -2   --> 1200
+-}
+roundTo : Int -> Float -> Float
+roundTo place number =
+  let
+    multiplier =
+      place
+        |> (^) 10
+        |> toFloat
+
+  in
+    number
+      |> (*) multiplier
+      |> round
+      |> toFloat
+      |> flip (/) multiplier
+
+
+-- STRING-TO-BOOL CONVERSION
 
 {-| Convert a boolean string to a `Bool`, ignoring case
 
