@@ -1,5 +1,6 @@
 module Toolkit.Operators exposing
   ( (|++), (|::)
+  , (:|++), (:|::)
   , (||>)
   , (.|>), (:|>)
   , (..|>), (@@|>)
@@ -10,7 +11,7 @@ module Toolkit.Operators exposing
 
 {-|
 
-## A small set of custom infix operators for maintaining a consistent, unidirectional coding style when working with lists, `Maybe` and `Result` values, and functions that take multiple arguments
+## A set of custom infix operators for maintaining a consistent, unidirectional coding style when working with lists, `Maybe` and `Result` values, and functions that take multiple arguments
 
 At some point after I started working in Elm, it became clear to me that
 debugging, refactoring, and extending existing code would be a lot easier if
@@ -43,7 +44,7 @@ easily import them into other projects.
 
 
 # Appending Things
-@docs (|++), (|::)
+@docs (|++), (|::), (:|++), (:|::)
 
 # Function Application
 @docs (||>)
@@ -91,6 +92,33 @@ infixl 0 |++
   list ++ [ a ]
 
 infixl 0 |::
+
+
+{-| Wrap LHS in a list, then append RHS list to it; equivalent to `::`, but
+left-associative with precedence set to `0` (same as `|>`)
+
+    ("a" ++ "b") :: ["cd","ef"]   --> ["ab","cd","ef"]
+    "a" ++ "b" :: ["cd","ef"]     --> ERROR
+    "a" ++ "b" :|++ ["cd","ef"]   --> ["ab","cd","ef"]
+
+-}
+(:|++) : a -> List a -> List a
+(:|++) a list =
+   a :: list
+
+infixl 0 :|++
+
+
+{-| Wrap LHS in a list, then append the item on RHS to the list
+
+    1 :|:: 2    --> [1,2]
+
+-}
+(:|::) : a -> a -> List a
+(:|::) a b =
+  [a, b]
+
+infixl 0 :|::
 
 
 --FUNCTION APPLICATION
