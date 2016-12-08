@@ -1,10 +1,10 @@
 module Toolkit.Helpers exposing
   ( roundTo, toBool, isOneOf, isInRange, isBetween, maybe2Tuple, maybe3Tuple
   , maybe4Tuple, maybeList, result2Tuple, result3Tuple, result4Tuple, resultList
-  , wrapList, getNth, take2Tuple, take3Tuple, take4Tuple, unzip3, unzip4, zip
-  , zip3, zip4, first3, second3, third3, first4, second4, third4, fourth4
-  , map2Tuple, map3Tuple, map4Tuple, curry3, curry4, uncurry3, uncurry4, apply2
-  , apply3, apply4, applyList
+  , wrapList, getNth, take2Tuple, take3Tuple, take4Tuple, list2Tuple, list3Tuple
+  , list4Tuple, unzip3, unzip4, zip, zip3, zip4, first3, second3, third3, first4
+  , second4, third4, fourth4, map2Tuple, map3Tuple, map4Tuple, curry3, curry4
+  , uncurry3, uncurry4, apply2, apply3, apply4, applyList
   )
 
 
@@ -35,7 +35,8 @@ functions in one module so that I can easily import them into other projects.
 @docs wrapList, getNth
 
 # List-Tuple Conversions
-@docs take2Tuple, take3Tuple, take4Tuple, unzip3, unzip4, zip, zip3, zip4
+@docs take2Tuple, take3Tuple, take4Tuple, list2Tuple, list3Tuple, list4Tuple
+@docs unzip3, unzip4, zip, zip3, zip4
 
 # Getting Values from Tuples
 @docs first3, second3, third3, first4, second4, third4, fourth4
@@ -314,9 +315,9 @@ getNth n list =
 {-| Returns the first two items in a list as a 2-tuple, or `Nothing` if the list
 contains fewer than two items
 
-    take2Tuple [1,2]   --> Just (1,2)
-    take2Tuple [1,2,3]    --> Just (1,2)
-    take2Tuple [1]    --> Nothing
+    take2Tuple [1,2]    --> Just (1,2)
+    take2Tuple [1,2,3]  --> Just (1,2)
+    take2Tuple [1]      --> Nothing
 -}
 take2Tuple : List a -> Maybe (a, a)
 take2Tuple list =
@@ -343,6 +344,30 @@ take4Tuple list =
     list
       |> apply4 (getNth 0, getNth 1, getNth 2, getNth 3)
       |> maybe4Tuple
+
+
+{-| Given a 2-tuple where both values are of the same type, return a list
+containing those values
+-}
+list2Tuple : (a, a) -> List a
+list2Tuple (a, b) =
+  [a, b]
+
+
+{-| Given a 3-tuple where all three values are of the same type, return a list
+containing those values
+-}
+list3Tuple : (a, a, a) -> List a
+list3Tuple (a, b, c) =
+  [a, b, c]
+
+
+{-| Given a 4-tuple where all four values are of the same type, return a list
+containing those values
+-}
+list4Tuple : (a, a, a, a) -> List a
+list4Tuple (a, b, c, d) =
+  [a, b, c, d]
 
 
 {-| Convert a 3-tuple of lists to a list of 3-tuples (see
