@@ -1,7 +1,7 @@
 module Toolkit.Operators exposing
   ( (|++), (|::)
   , (:|++), (:|::)
-  , (||>)
+  , (#), (||>)
   , (.|>), (:|>)
   , (..|>), (@@|>)
   , (?=), (!=)
@@ -47,7 +47,7 @@ easily import them into other projects.
 @docs (|++), (|::), (:|++), (:|::)
 
 # Function Application
-@docs (||>)
+@docs (#), (||>)
 
 ## with Lists
 @docs (.|>), (:|>)
@@ -122,6 +122,22 @@ infixl 0 :|::
 
 
 --FUNCTION APPLICATION
+
+{-| An operator for
+[`flip`](http://package.elm-lang.org/packages/elm-lang/core/5.0.0/Basics#flip).
+Think of the `#` symbol as appearing where the missing argument would go.
+
+    4 |> (/) 2        --> 0.5
+    4 |> flip (/) 2   --> 2
+    4 |> (/) # 2      --> 2
+
+
+-}
+(#) : (a -> b -> c) -> b -> (a -> c)
+(#) f b =
+  flip f b
+
+infixl 9 #
 
 {-| Forward function application with precedence set to 9. Allows you to avoid
 parentheses when you want the argument to appear before the function name in an
