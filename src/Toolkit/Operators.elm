@@ -60,10 +60,6 @@ easily import them into other projects.
 
 -}
 
-import List
-import Maybe
-import Result
-
 
 --APPENDING THINGS
 

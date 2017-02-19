@@ -1,7 +1,7 @@
 module Toolkit.Helpers exposing
   ( roundTo, toBool, isOneOf, isInRange, isBetween, maybe2Tuple, maybe3Tuple
   , maybe4Tuple, maybeList, result2Tuple, result3Tuple, result4Tuple, resultList
-  , wrapList, getNth, take2Tuple, take3Tuple, take4Tuple, list2Tuple, list3Tuple
+  , getNth, unique, take2Tuple, take3Tuple, take4Tuple, list2Tuple, list3Tuple
   , list4Tuple, unzip3, unzip4, zip, zip3, zip4, first3, second3, third3, first4
   , second4, third4, fourth4, map2Tuple, map3Tuple, map4Tuple, curry3, curry4
   , uncurry3, uncurry4, apply2, apply3, apply4, applyList
@@ -31,8 +31,11 @@ functions in one module so that I can easily import them into other projects.
 # Error Handling with Multiple `Result` Values
 @docs result2Tuple, result3Tuple, result4Tuple, resultList
 
-# Value-to-List and Value-From-List Conversions
-@docs wrapList, getNth
+# Getting a Value from a List
+@docs getNth
+
+# Removing Duplicate Values from a List
+@docs unique
 
 # List-Tuple Conversions
 @docs take2Tuple, take3Tuple, take4Tuple, list2Tuple, list3Tuple, list4Tuple
@@ -53,9 +56,7 @@ functions in one module so that I can easily import them into other projects.
 -}
 
 
-import String
-import List
-import Result
+import Set
 
 
 -- ROUNDING NUMBERS
@@ -276,18 +277,7 @@ resultList errorMsg list =
       Err errorMsg
 
 
--- VALUE-TO-LIST AND VALUE-FROM-LIST CONVERSIONS
-
-{-| Return a one-item list containing the argument
-
-    wrapList ("key", "value")
-
-    --> [ ("key", "value") ]
--}
-wrapList : a -> List a
-wrapList a =
-  [ a ]
-
+-- GETTING A VALUE FROM A LIST
 
 {-| Get the value at the nth place of a list without converting the list to an
 array; returns `Nothing` if the list contains fewer than `n + 1` items, or if
@@ -308,6 +298,17 @@ getNth n list =
     list
       |> List.drop n
       |> List.head
+
+
+-- REMOVING DUPLICATE VALUES FROM A LIST
+{-| Given a list of values, returns the unique values as a list sorted from
+highest to lowest
+-}
+unique : List comparable -> List comparable
+unique list =
+  list
+    |> Set.fromList
+    |> Set.toList
 
 
 -- LIST-TUPLE CONVERSIONS
