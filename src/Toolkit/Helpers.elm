@@ -1,10 +1,11 @@
 module Toolkit.Helpers exposing
-  ( roundTo, toBool, isOneOf, isInRange, isBetween, maybe2Tuple, maybe3Tuple
-  , maybe4Tuple, maybeList, result2Tuple, result3Tuple, result4Tuple, resultList
-  , getNth, unique, take2Tuple, take3Tuple, take4Tuple, list2Tuple, list3Tuple
-  , list4Tuple, unzip3, unzip4, zip, zip3, zip4, first3, second3, third3, first4
-  , second4, third4, fourth4, map2Tuple, map3Tuple, map4Tuple, curry3, curry4
-  , uncurry3, uncurry4, apply2, apply3, apply4, applyList
+  ( roundTo, toBool, isOneOf, isInRange, isBetween, try, maybe2Tuple
+  , maybe3Tuple, maybe4Tuple, maybeList, result2Tuple, result3Tuple
+  , result4Tuple, resultList, getNth, unique, take2Tuple, take3Tuple, take4Tuple
+  , list2Tuple, list3Tuple, list4Tuple, unzip3, unzip4, zip, zip3, zip4, first3
+  , second3, third3, first4, second4, third4, fourth4, map2Tuple, map3Tuple
+  , map4Tuple, curry3, curry4, uncurry3, uncurry4, apply2, apply3, apply4
+  , applyList
   )
 
 
@@ -24,6 +25,9 @@ functions in one module so that I can easily import them into other projects.
 
 # Test Functions
 @docs isOneOf, isInRange, isBetween
+
+# Error Handling with `Result` Functions
+@docs try
 
 # Error Handling with Multiple `Maybe` Values
 @docs maybe2Tuple, maybe3Tuple, maybe4Tuple, maybeList
@@ -135,6 +139,22 @@ that a test value equal to one of the endpoints will return `False`
 isBetween : (comparable, comparable) -> comparable -> Bool
 isBetween (min, max) value =
   value > min && value < max
+
+
+-- ERROR HANDLING WITH RESULT FUNCTIONS
+
+{-| Apply a function that returns a `Result` value, with the initial value as
+the default (equivalent to `f x |> Result.withDefault x`). Note that the type
+returned in an `Ok` result must match the type of the initial value.
+-}
+try : (a -> Result x a) -> a -> a
+try resultFunction initialValue =
+  case initialValue |> resultFunction of
+    Ok resultValue ->
+      resultValue
+
+    Err _ ->
+      initialValue
 
 
 --ERROR HANDLING WITH MULTIPLE MAYBES
