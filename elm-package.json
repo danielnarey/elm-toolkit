@@ -1,18 +1,30 @@
 {
-    "version": "5.1.0",
-    "summary": "Generic helpers and custom operators that I use across other projects",
+    "version": "6.0.0",
+    "summary": "A toolkit of generic helpers and custom operators to extend elm-lang/core",
     "repository": "https://github.com/danielnarey/elm-toolkit.git",
     "license": "BSD2",
     "source-directories": [
-        "./src",
-        "./src/Toolkit"
+        "./src"
     ],
     "exposed-modules": [
-        "Toolkit.Helpers",
-        "Toolkit.Operators"
+        "Toolkit.Compare",
+        "Toolkit.String",
+        "Toolkit.Float",
+        "Toolkit.Function",
+        "Toolkit.Function.Operators",
+        "Toolkit.List",
+        "Toolkit.List.Operators",
+        "Toolkit.Maybe",
+        "Toolkit.Maybe.Operators",
+        "Toolkit.Result",
+        "Toolkit.Result.Operators",
+        "Toolkit.Tuple",
+        "Toolkit.Tuple.Operators",
+        "Toolkit.Tuple3",
+        "Toolkit.Tuple4"
     ],
     "dependencies": {
-        "elm-lang/core": "5.0.0 <= v < 6.0.0"
+        "elm-lang/core": "5.1.1 <= v < 6.0.0"
     },
     "elm-version": "0.18.0 <= v < 0.19.0"
 }
