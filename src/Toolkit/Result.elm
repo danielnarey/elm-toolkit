@@ -1,12 +1,13 @@
 module Toolkit.Result exposing
   ( try
   , zip, zip3, zip4, zipList
+  , filter
   )
 
 {-|
 
 # Helpers for error handling
-@docs try, zip, zip3, zip4, zipList
+@docs try, zip, zip3, zip4, zipList, filter
 
 -}
 
@@ -102,3 +103,26 @@ zipList error resultList =
         singletonList
           |> List.concat
           |> Ok
+
+
+{-| Given a list of `Result` values, return a list containing only the success
+values.
+
+    Toolkit.Result.filter [ Ok 1, Ok 2, Err ".." ]   --> [1, 2]
+
+-}
+filter : List (Result x a) -> List a
+filter resultList =
+  let
+    toSingleton resultValue =
+      case resultValue of
+        Ok value ->
+          [ value ]
+
+        Err _ ->
+          []
+
+  in
+    resultList
+      |> List.map toSingleton
+      |> List.concat

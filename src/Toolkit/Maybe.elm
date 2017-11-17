@@ -1,8 +1,12 @@
 module Toolkit.Maybe exposing
-  ( zip, zip3, zip4, zipList )
+  ( zip, zip3, zip4, zipList
+  , filter
+  )
 
 {-|
-@docs zip, zip3, zip4, zipList
+
+# Helpers for error handling
+@docs zip, zip3, zip4, zipList, filter
 
 -}
 
@@ -78,3 +82,26 @@ zipList maybeList =
           |> List.map toSingleton
           |> List.concat
           |> Just
+
+
+{-| Given a list of `Maybe` values, return a list containing only the defined
+values.
+
+    Toolkit.Maybe.filter [ Just 1, Just 2, Nothing ]   --> [1, 2]
+
+-}
+filter : List (Maybe a) -> List a
+filter maybeList =
+  let
+    toSingleton maybeValue =
+      case maybeValue of
+        Just value ->
+          [ value ]
+
+        Nothing ->
+          []
+
+  in
+    maybeList
+      |> List.map toSingleton
+      |> List.concat
