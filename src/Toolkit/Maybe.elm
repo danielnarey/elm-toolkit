@@ -5,16 +5,29 @@ module Toolkit.Maybe exposing
 
 {-|
 
-# Helpers for error handling
-@docs zip, zip3, zip4, zipList, filter
+Helpers for error handling with multiple `Maybe` values
+
+# Zipping
+@docs zip, zip3, zip4, zipList
+
+# Filtering
+@docs filter
 
 -}
 
 {-| Given a 2-tuple of `Maybe` values, if both values are defined, return `Just`
 the 2-tuple of values; otherwise, return `Nothing`
 
-    Toolkit.Maybe.zip (Just 1, Just 2)    --> Just (1,2)
-    Toolkit.Maybe.zip (Just 1, Nothing)    --> Nothing
+    (Just 1, Just 2)
+      |> Toolkit.Maybe.zip
+
+    --> Just (1,2)
+
+    (Just 1, Nothing)
+      |> Toolkit.Maybe.zip
+
+    --> Nothing
+
 -}
 zip : (Maybe a, Maybe b) -> Maybe (a, b)
 zip tuple =
@@ -56,9 +69,20 @@ zip4 tuple =
 `Just` the list of values; otherwise, return `Nothing`. When passed an empty
 list, returns `Just` an empty list.
 
-    Toolkit.Maybe.zipList [Just 1, Just 2]    --> Just [1,2]
-    Toolkit.Maybe.zipList [Just 1, Nothing]   --> Nothing
-    Toolkit.Maybe.zipList []                  --> Just []
+    [Just 1, Just 2]
+      |> Toolkit.Maybe.zipList
+
+    --> Just [1,2]
+
+    [Just 1, Nothing]
+      |> Toolkit.Maybe.zipList
+
+    --> Nothing
+
+    []
+      |> Toolkit.Maybe.zipList
+
+    --> Just []
 
 -}
 zipList : List (Maybe a) -> Maybe (List a)
@@ -87,7 +111,13 @@ zipList maybeList =
 {-| Given a list of `Maybe` values, return a list containing only the defined
 values.
 
-    Toolkit.Maybe.filter [ Just 1, Just 2, Nothing ]   --> [1, 2]
+    [ Just 1
+    , Just 2
+    , Nothing
+    ]
+      |> Toolkit.Maybe.filter
+
+    --> [1, 2]
 
 -}
 filter : List (Maybe a) -> List a

@@ -2,14 +2,28 @@ module Toolkit.Function.Operators exposing
   ( (||>), (@@|>), (#) )
 
 {-|
-@docs (||>), (@@|>), (#)
+
+Some experimental operators for function application
+
+# Precedence
+@docs (||>)
+
+# Uncurrying
+@docs (@@|>)
+
+# Flipping arguments
+@docs (#)
+
 -}
 
 {-| Forward function application with precedence set to 9. Allows you to avoid
 parentheses when you want the argument to appear before the function name in an
 inline expression.
 
-    1 ||> toString ++ 2 ||> toString    --> "12"
+    1 ||> toString ++ 2 ||> toString
+
+    --> "12"
+
 -}
 (||>) : a -> (a -> b) -> b
 (||>) a f =
@@ -22,7 +36,11 @@ infixl 9 ||>
 [`uncurry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#uncurry)
 with 2 parameters
 
-    (1,2) @@|> (+)    --> 3
+    (1,2)
+    @@|> (+)
+
+    --> 3
+
 -}
 (@@|>) : (a, b) -> (a -> b -> c) -> c
 (@@|>) params f =
@@ -35,9 +53,20 @@ infixl 0 @@|>
 [`flip`](http://package.elm-lang.org/packages/elm-lang/core/5.0.0/Basics#flip).
 Think of the `#` symbol as appearing where the missing argument would go.
 
-    4 |> (/) 2        --> 0.5
-    4 |> flip (/) 2   --> 2
-    4 |> (/) # 2      --> 2
+    4
+      |> (/) 2
+
+    --> 0.5
+
+    4
+      |> flip (/) 2
+
+    --> 2
+
+    4
+      |> (/) # 2
+
+    --> 2
 
 
 -}

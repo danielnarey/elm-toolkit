@@ -2,7 +2,15 @@ module Toolkit.Tuple4 exposing
   ( first, second, third, fourth, map )
 
 {-|
-@docs first, second, third, fourth, map
+
+Helpers for working with 4-tuples
+
+# Getting values
+@docs first, second, third, fourth
+
+# Mapping functions
+@docs map
+
 -}
 
 {-| Return the first value of a 4-tuple

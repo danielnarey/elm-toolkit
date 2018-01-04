@@ -2,7 +2,12 @@ module Toolkit.String exposing
   ( toBool )
 
 {-|
+
+Helpers for working with strings
+
+# Conversions
 @docs toBool
+
 -}
 
 {-| Convert a boolean string to a `Bool`, ignoring case

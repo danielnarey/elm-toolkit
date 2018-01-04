@@ -2,7 +2,15 @@ module Toolkit.Tuple3 exposing
   ( first, second, third, map )
 
 {-|
-@docs first, second, third, map
+
+Helpers for working with 3-tuples
+
+# Getting values
+@docs first, second, third
+
+# Mapping functions
+@docs map
+
 -}
 
 {-| Return the first value of a 3-tuple

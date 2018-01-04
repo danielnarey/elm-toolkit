@@ -6,6 +6,8 @@ module Toolkit.Function exposing
 
 {-|
 
+Helpers to do more with functions
+
 # Apply multiple function to data
 @docs apply2, apply3, apply4, applyList, applyWithArgs
 
@@ -64,6 +66,7 @@ not the case for the apply functions that return tuples.
         ]
 
     --> ["ab", "ac", "ad"]
+
 -}
 applyList : List (a -> b) -> a -> List b
 applyList fList data =
@@ -86,6 +89,7 @@ returning the results as a list.
         ]
 
     --> ["ab", "ac", "ad"]
+
 -}
 applyWithArgs : (a -> b -> b) -> List a -> b -> List b
 applyWithArgs f args data =
@@ -136,9 +140,13 @@ compose4 (f1, f2, f3, f4) data =
 argument of the same type, with a result also of the same type.
 
     "a"
-      |> Toolkit.Function.composeList [ flip (++) "b", flip (++) "c"]
+      |> Toolkit.Function.composeList
+        [ flip (++) "b"
+        , flip (++) "c"
+        ]
 
     --> "abc"
+
 -}
 composeList : List (a -> a) -> a -> a
 composeList fList data =
@@ -160,9 +168,14 @@ composeList fList data =
 {-| Compose a series of functions that vary by the value of the first argument.
 
     "a"
-      |> Toolkit.Function.composeWithArgs (flip (++)) ["b", "c", "d"]
+      |> Toolkit.Function.composeWithArgs (flip (++))
+        [ "b"
+        , "c"
+        , "d"
+        ]
 
     --> "abcd"
+
 -}
 composeWithArgs : (a -> b -> b) -> List a -> b -> b
 composeWithArgs f args data =

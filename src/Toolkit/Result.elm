@@ -6,8 +6,16 @@ module Toolkit.Result exposing
 
 {-|
 
-# Helpers for error handling
-@docs try, zip, zip3, zip4, zipList, filter
+Helpers for error handling with multiple `Result` values
+
+# Implicit default value
+@docs try
+
+# Zipping
+@docs zip, zip3, zip4, zipList
+
+# Filtering
+@docs filter
 
 -}
 
@@ -25,11 +33,20 @@ try resultFunction initialValue =
     Err _ ->
       initialValue
 
+
 {-| Given a 2-tuple of `Result` values, if both values are `Ok`, return an `Ok`
 result containing the 2-tuple of values; otherwise, return an `Err` value.
 
-    result2Tuple "ERROR" (Ok 1, Ok 2)       --> Ok (1,2)
-    result2Tuple "ERROR" (Ok 1, Err "..")   --> Err "ERROR"
+    (Ok 1, Ok 2)
+      |> Toolkit.Result.zip "ERROR"
+
+    --> Ok (1,2)
+
+    (Ok 1, Err "..")
+      |> Toolkit.Result.zip "ERROR"
+
+    --> Err "ERROR"
+
 -}
 zip : x -> (Result x a, Result x b) -> Result x (a, b)
 zip error tuple =
@@ -73,9 +90,20 @@ zip4 error tuple =
 result containing the list of values; otherwise, return an error message. When
 passed an empty list, returns `Ok []`.
 
-    Toolkit.Result.zipList "ERROR" [Ok 1, Ok 2]       --> Ok [1,2]
-    Toolkit.Result.zipList "ERROR" [Ok 1, Err ".."]   --> Err "ERROR"
-    Toolkit.Result.zipList "ERROR" []                 --> Ok []
+    [Ok 1, Ok 2]
+      |> Toolkit.Result.zipList "ERROR"
+
+    --> Ok [1,2]
+
+    [Ok 1, Err ".."]
+      |> Toolkit.Result.zipList "ERROR"
+
+    --> Err "ERROR"
+
+    []
+      |> Toolkit.Result.zipList "ERROR"
+
+    --> Ok []
 
 -}
 zipList : x -> List (Result x a) -> Result x (List a)
@@ -108,7 +136,13 @@ zipList error resultList =
 {-| Given a list of `Result` values, return a list containing only the success
 values.
 
-    Toolkit.Result.filter [ Ok 1, Ok 2, Err ".." ]   --> [1, 2]
+    [ Ok 1
+    , Ok 2
+    , Err ".."
+    ]
+      |> Toolkit.Result.filter
+
+    --> [1, 2]
 
 -}
 filter : List (Result x a) -> List a

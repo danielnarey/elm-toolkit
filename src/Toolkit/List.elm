@@ -8,6 +8,8 @@ module Toolkit.List exposing
 
 {-|
 
+Helpers for working with lists
+
 # General
 @docs isOneOf, getNth, unique
 
@@ -23,12 +25,23 @@ import Set
 import Toolkit.Maybe
 import Toolkit.Function
 
+
 {-| Given a list and a test value, returns `True` if the list contains a value
 equal to the test value.
+
+    "apple"
+      |> Toolkit.List.isOneOf
+        [ "apple"
+        , "banana"
+        , "cherry"
+        ]
+
+    --> True
 
 Equivalent to
 [List.member](http://package.elm-lang.org/packages/elm-lang/core/latest/List#member)
 with the arguments flipped
+
 -}
 isOneOf : List a -> a -> Bool
 isOneOf list value =
@@ -39,10 +52,25 @@ isOneOf list value =
 array; returns `Nothing` if the list contains fewer than `n + 1` items, or if
 `n` is negative
 
-    getNth 0 [1, 3, 9, 27]    --> Just 1
-    getNth 3 [1, 3, 9, 27]    --> Just 27
-    getNth 4 [1, 3, 9, 27]    --> Nothing
-    getNth -1 [1, 3, 9, 27]   --> Nothing
+    [1, 3, 9, 27]
+      |> Toolkit.List.getNth 0
+
+    --> Just 1
+
+    [1, 3, 9, 27]
+      |> Toolkit.List.getNth 3
+
+    --> Just 27
+
+    [1, 3, 9, 27]
+      |> Toolkit.List.getNth 4
+
+    --> Nothing
+
+    [1, 3, 9, 27]
+      |> Toolkit.List.getNth -1
+
+    --> Nothing
 
 -}
 getNth : Int -> List a -> Maybe a
@@ -59,6 +87,16 @@ getNth n list =
 -- REMOVING DUPLICATE VALUES FROM A LIST
 {-| Given a list of values, returns the unique values as a list sorted from
 highest to lowest
+
+    [ "banana"
+    , "cherry"
+    , "apple"
+    , "apple"
+    ]
+      |> Toolkit.List.unique
+
+    --> ["apple", "banana", "cherry"]
+
 -}
 unique : List comparable -> List comparable
 unique =
@@ -71,9 +109,21 @@ unique =
 {-| Returns the first two items in a list as a 2-tuple, or `Nothing` if the list
 contains fewer than two items
 
-    take2Tuple [1,2]    --> Just (1,2)
-    take2Tuple [1,2,3]  --> Just (1,2)
-    take2Tuple [1]      --> Nothing
+    [1,2]
+      |> Toolkit.List.take2Tuple
+
+    --> Just (1,2)
+
+    [1,2,3]
+      |> Toolkit.List.take2Tuple
+
+    --> Just (1,2)
+
+    [1]
+      |> Toolkit.List.take2Tuple
+
+    --> Nothing
+
 -}
 take2Tuple : List a -> Maybe (a, a)
 take2Tuple list =
@@ -101,8 +151,15 @@ take4Tuple list =
       |>  Toolkit.Function.apply4 (getNth 0, getNth 1, getNth 2, getNth 3)
       |> Toolkit.Maybe.zip4
 
+
 {-| Given a 2-tuple where both values are of the same type, return a list
 containing those values
+
+    (1,2)
+      |> Toolkit.List.from2Tuple
+
+    --> Just [1,2]
+
 -}
 from2Tuple : (a, a) -> List a
 from2Tuple (a, b) =
@@ -159,7 +216,18 @@ unzip4 quads =
 
 {-| Convert a 2-tuple of lists to a list of 2-tuples
 
-    zip ([0,17,1337], [True,False,True])
+    ( [ 0
+      , 17
+      , 1337
+      ]
+
+    , [ True
+      , False
+      , True
+      ]
+
+    )
+      |> Toolkit.List.zip
 
     --> [(0, True), (17, False), (1337, True)]
 

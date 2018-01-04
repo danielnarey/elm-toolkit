@@ -1,17 +1,33 @@
-module Toolkit.Float exposing (roundTo)
+module Toolkit.Float exposing
+  ( roundTo )
 
 {-|
+
+Helpers for working with `Float` values
+
+# Rounding
 @docs roundTo
+
 -}
 
--- ROUNDING NUMBERS
 
 {-| Round a `Float` to a given number of decimal places
 
-    pi |> roundTo 2      --> 3.14
-    pi |> roundTo 0      --> 3
-    1234 |> roundTo -2   --> 1200
-    
+    pi
+      |> roundTo 2
+
+    --> 3.14
+
+    pi
+      |> roundTo 0
+
+    --> 3
+
+    1234
+      |> roundTo -2
+
+    --> 1200
+
 -}
 roundTo : Int -> Float -> Float
 roundTo place number =
