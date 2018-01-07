@@ -1,5 +1,5 @@
 {
-    "version": "6.1.1",
+    "version": "6.2.0",
     "summary": "A toolkit of generic helpers and custom operators to extend elm-lang/core",
     "repository": "https://github.com/danielnarey/elm-toolkit.git",
     "license": "BSD2",

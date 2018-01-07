@@ -1,12 +1,12 @@
 module Toolkit.Function.Operators exposing
-  ( (||>), (@@|>), (#) )
+  ( (|>.), (@@|>), (#), (||>) )
 
 {-|
 
 Some experimental operators for function application
 
-# Precedence
-@docs (||>)
+# Apply List
+@docs (|>.)
 
 # Uncurrying
 @docs (@@|>)
@@ -14,22 +14,38 @@ Some experimental operators for function application
 # Flipping arguments
 @docs (#)
 
--}
-
-{-| Forward function application with precedence set to 9. Allows you to avoid
-parentheses when you want the argument to appear before the function name in an
-inline expression.
-
-    1 ||> toString ++ 2 ||> toString
-
-    --> "12"
+# Precedence
+@docs (||>)
 
 -}
-(||>) : a -> (a -> b) -> b
-(||>) a f =
-  f a
 
-infixl 9 ||>
+
+{-| Alias for `Toolkit.Function.applyList`
+
+Given a list containing any number of functions and a value accepted by
+every function in the list, return a list containing all of the results. Note
+that to use this operator, all of the results must be of the same type.
+
+    "a"
+      |>.
+        [ flip (++) "b"
+        , flip (++) "c"
+        , flip (++) "d"
+        ]
+
+    --> ["ab", "ac", "ad"]
+
+-}
+(|>.) : a -> List (a -> b) -> List b
+(|>.) data fList =
+  case fList of
+    [] ->
+      []
+
+    next :: rest ->
+      (data |> next) :: (data |>. rest)
+
+infixl 0 |>.
 
 
 {-| Forward operator for
@@ -50,7 +66,7 @@ infixl 0 @@|>
 
 
 {-| An operator for
-[`flip`](http://package.elm-lang.org/packages/elm-lang/core/5.0.0/Basics#flip).
+[`flip`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#flip).
 Think of the `#` symbol as appearing where the missing argument would go.
 
     4
@@ -75,3 +91,19 @@ Think of the `#` symbol as appearing where the missing argument would go.
   flip f b
 
 infixl 9 #
+
+
+{-| Forward function application with precedence set to 9. Allows you to avoid
+parentheses when you want the argument to appear before the function name in an
+inline expression.
+
+    1 ||> toString ++ 2 ||> toString
+
+    --> "12"
+
+-}
+(||>) : a -> (a -> b) -> b
+(||>) a f =
+  f a
+
+infixl 9 ||>
